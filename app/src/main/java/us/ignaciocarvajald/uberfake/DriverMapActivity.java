@@ -99,7 +99,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
      DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
 
      GeoFire geoFire = new GeoFire(ref);
-     geoFire.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()));
+     geoFire.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
+                 @Override
+                 public void onComplete(String key, DatabaseError error) {
+
+                 }
+             });
     }
 
     @Override
