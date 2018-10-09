@@ -84,7 +84,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    Map<String, Object> map = ( Map<String, Object>) dataSnapshot.getValue();
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     if (map.get("customerRideID") != null){
                         customerId = map.get("customerRideID").toString();
                         getAssignedCustomerPickupLocation();
@@ -155,7 +155,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             mLastLocation = location;
             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
 
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             DatabaseReference refAvailable = FirebaseDatabase.getInstance().getReference("driversAvailable");
@@ -165,7 +165,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
             switch (customerId){
                 case "":
-                    geoFireWorking.removeLocation(userId);
+                    geoFireWorking.removeLocation(userId, new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                        }
+                    });
                     geoFireAvailable.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                         @Override
                         public void onComplete(String key, DatabaseError error) {
@@ -174,7 +179,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                     });
                     break;
                 default:
-                    geoFireAvailable.removeLocation(userId);
+                    geoFireAvailable.removeLocation(userId, new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                        }
+                    });
                     geoFireWorking.setLocation(userId, new GeoLocation(location.getLatitude(), location.getLongitude()), new GeoFire.CompletionListener() {
                         @Override
                         public void onComplete(String key, DatabaseError error) {
@@ -216,7 +226,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("driversAvailable");
 
         GeoFire geoFire = new GeoFire(ref);
-        geoFire.removeLocation(userId);
+        geoFire.removeLocation(userId, new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+
+            }
+        });
 
     }
 }
